@@ -49,7 +49,7 @@ public class UserControllerTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.email").value("john@example.com"))
-                .andExpect(jsonPath("$.jwt").value("fake_jwt_token"));
+                .andExpect(jsonPath("$.jwtToken").value("fake_jwt_token"));
     }
 
     @Test
@@ -64,6 +64,6 @@ public class UserControllerTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.email").value("john@example.com"))
-                .andExpect(jsonPath("$.jwt").value("fake_jwt_token"));
+                .andExpect(jsonPath("$.jwtToken").value("fake_jwt_token"));
     }
 }
