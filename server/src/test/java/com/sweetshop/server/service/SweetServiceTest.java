@@ -177,44 +177,5 @@ public class SweetServiceTest {
         assertEquals(2, result.size());
     }
 
-    @Test
-    void loadSweetsByName_shouldReturnSetOfSweetResponses(){
-        Sweet sweet1 = new Sweet();
-        sweet1.setName("Chocolate");
-        sweet1.setPrice(1.00);
-
-        Sweet sweet2 = new Sweet();
-        sweet2.setName("Chocolate");
-        sweet2.setPrice(10.00);
-        when(sweetRepository.findByName("Chocolate")).thenReturn(List.of(sweet1,sweet2));
-        var result = sweetService.loadSweetsByName("Chocolate");
-        assertEquals(2, result.size());
-    }
-    @Test
-    void loadSweetsByCategory_shouldReturnSetOfSweetResponses(){
-        Sweet sweet1 = new Sweet();
-        sweet1.setCategory("Chocolate");
-        sweet1.setPrice(1.00);
-
-        Sweet sweet2 = new Sweet();
-        sweet2.setCategory("Chocolate");
-        sweet2.setPrice(10.00);
-        when(sweetRepository.findByCategory("Chocolate")).thenReturn(List.of(sweet1,sweet2));
-        var result = sweetService.loadSweetsByCategory("Chocolate");
-        assertEquals(2, result.size());
-    }
-    @Test
-    void loadSweetsByPriceRange_shouldReturnSetOfSweetResponses(){
-        Sweet sweet1 = new Sweet();
-        sweet1.setCategory("Chocolate");
-        sweet1.setPrice(1.00);
-
-        Sweet sweet2 = new Sweet();
-        sweet2.setCategory("Chocolate");
-        sweet2.setPrice(10.00);
-        when(sweetRepository.findByPriceRange(1.00,10.00)).thenReturn(List.of(sweet1,sweet2));
-        var result = sweetService.loadSweetsByPriceRange(1.00,10.00);
-        assertEquals(2, result.size());
-    }
 
 }

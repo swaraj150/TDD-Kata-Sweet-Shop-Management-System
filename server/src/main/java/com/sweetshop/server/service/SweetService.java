@@ -14,8 +14,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Service
@@ -100,20 +105,9 @@ public class SweetService {
                 .map(SweetResponse::toSweetResponse)
                 .collect(Collectors.toSet());
     }
-    public Set<SweetResponse> loadSweetsByName(String name){
-        return sweetRepository.findByName(name)
-                .stream()
-                .map(SweetResponse::toSweetResponse)
-                .collect(Collectors.toSet());
-    }
-    public Set<SweetResponse> loadSweetsByCategory(String category){
-        return sweetRepository.findByCategory(category)
-                .stream()
-                .map(SweetResponse::toSweetResponse)
-                .collect(Collectors.toSet());
-    }
-    public Set<SweetResponse> loadSweetsByPriceRange(Double p1,Double p2){
-        return sweetRepository.findByPriceRange(p1,p2)
+
+    public Set<SweetResponse> searchSweets(String name, String category, Double minPrice, Double maxPrice){
+        return sweetRepository.search(name, category, minPrice, maxPrice)
                 .stream()
                 .map(SweetResponse::toSweetResponse)
                 .collect(Collectors.toSet());
