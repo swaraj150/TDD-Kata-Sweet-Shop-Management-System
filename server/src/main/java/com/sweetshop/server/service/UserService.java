@@ -35,11 +35,15 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         userRepository.save(user);
         String jwtToken=jwtService.generateToken(user);
-        return UserResponse.toUserResponse(user,jwtService.generateToken(user));
+        return UserResponse.toUserResponse(user,jwtToken);
+    }
+    private void authenticateUser(String email, String password) {
+        UsernamePasswordAuthenticationToken authToken =
+                new UsernamePasswordAuthenticationToken(email, password);
+        authenticationManager.authenticate(authToken);
     }
     public UserResponse authenticate(LoginUserRequest request){
-        UsernamePasswordAuthenticationToken authenticationToken=new UsernamePasswordAuthenticationToken(request.getEmail(),request.getPassword());
-        authenticationManager.authenticate(authenticationToken);
+        authenticateUser(request.getEmail(), request.getPassword());
         UserDetails user=userDetailsService.loadUserByUsername(request.getEmail());
         String jwtToken=jwtService.generateToken(user);
         return UserResponse.toUserResponse((User)user,jwtToken);
