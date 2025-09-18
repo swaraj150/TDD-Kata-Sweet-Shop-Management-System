@@ -28,19 +28,33 @@ public class UserService {
 
 
     public UserResponse createUser(CreateUserRequest request){
-        throw new UnsupportedOperationException("createUser method is not implemented yet");
+        User user=new User();
+        user.setName(request.getName());
+        user.setEmail(request.getEmail());
+        user.setPhoneNumber(request.getPhoneNumber());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        userRepository.save(user);
+        String jwtToken=jwtService.generateToken(user);
+        return UserResponse.toUserResponse(user,jwtService.generateToken(user));
     }
     public UserResponse authenticate(LoginUserRequest request){
-        throw new UnsupportedOperationException("authenticate method is not implemented yet");
-
+        UsernamePasswordAuthenticationToken authenticationToken=new UsernamePasswordAuthenticationToken(request.getEmail(),request.getPassword());
+        authenticationManager.authenticate(authenticationToken);
+        UserDetails user=userDetailsService.loadUserByUsername(request.getEmail());
+        String jwtToken=jwtService.generateToken(user);
+        return UserResponse.toUserResponse((User)user,jwtToken);
     }
 
     public UserResponse loadUser(String email){
-        throw new UnsupportedOperationException("loadUser method is not implemented yet");
-
+        return UserResponse.toUserResponse((User)userDetailsService.loadUserByUsername(email));
     }
     public UserResponse loadCurrentUser(){
-        throw new UnsupportedOperationException("loadCurrentUser method is not implemented yet");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            throw new SecurityException("No authentication information found");
+        }
+        String email=authentication.getName();
+        return loadUser(email);
     }
 }
 

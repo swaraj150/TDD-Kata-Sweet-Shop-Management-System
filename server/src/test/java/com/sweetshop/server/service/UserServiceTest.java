@@ -43,7 +43,7 @@ class UserServiceTest {
         user.setPhoneNumber("1234567890");
         user.setPassword("encodedPassword");
 
-        when(passwordEncoder.encode("password")).thenReturn("encodedPassword");
+        when(passwordEncoder.encode("Password@123")).thenReturn("encodedPassword");
         when(userRepository.save(any(User.class))).thenReturn(user);
         when(jwtService.generateToken(any(User.class))).thenReturn("jwt-token");
 
