@@ -1,6 +1,7 @@
 package com.sweetshop.server.service;
 
 import com.sweetshop.server.dto.sweet.request.CreateSweetRequest;
+import com.sweetshop.server.dto.sweet.request.UpdateSweetInventoryRequest;
 import com.sweetshop.server.dto.sweet.request.UpdateSweetRequest;
 import com.sweetshop.server.dto.sweet.response.SweetResponse;
 import com.sweetshop.server.dto.user.response.UserResponse;
@@ -78,7 +79,7 @@ public class SweetService {
         sweetRepository.deleteById(id);
     }
 
-    public void purchaseSweet(Long id){
+    public void purchaseSweet(Long id, UpdateSweetInventoryRequest request){
         UserResponse user=userService.loadCurrentUser();
         if(!user.getRole().hasAuthority(UserAuthority.PURCHASE_SWEET)){
             throw new UnauthorizedAccessException("User does not have the required authority");
@@ -91,12 +92,18 @@ public class SweetService {
             throw new IllegalStateException("No sweets left");
         }
     }
-    public void restockSweet(Long id,Integer stock){
+    public void updateInventory(Long id,Integer stock){
         UserResponse user=userService.loadCurrentUser();
         if(!user.getRole().hasAuthority(UserAuthority.UPDATE_INVENTORY)){
             throw new UnauthorizedAccessException("User does not have the required authority");
         }
-        sweetRepository.updateStockCount(id,stock);
+        Sweet sweet=loadSweetById(id);
+        if(sweet.getStockCount()+stock>0){
+            sweet.setStockCount(sweet.getStockCount()+stock);
+            sweetRepository.save(sweet);
+        }else{
+            throw new IllegalStateException("No sweets left");
+        }
     }
 
     public Set<SweetResponse> loadAllSweets(){
