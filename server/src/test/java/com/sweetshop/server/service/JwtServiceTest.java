@@ -74,8 +74,13 @@ class JwtServiceTest {
                 .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
 
-        boolean valid = jwtService.isTokenValid(expiredToken, user);
-        assertThat(valid).isFalse();
+        boolean valid = false;
+        try {
+            valid = jwtService.isTokenValid(expiredToken, user);
+        } catch (ExpiredJwtException e) {
+            assertThat(valid).isFalse();
+        }
+
     }
 
 

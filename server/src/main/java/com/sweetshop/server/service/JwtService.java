@@ -24,40 +24,56 @@ public class JwtService {
     private final SecretKey signingKey;
 
     public Claims extractAllClaims(String jwt){
-       throw new UnsupportedOperationException("method not implemented yet");
+        return Jwts.parserBuilder()
+                .setSigningKey(signingKey)
+                .build()
+                .parseClaimsJws(jwt)
+                .getBody();
     }
     public <T> T extractClaim(String jwt, Function<Claims,T> claimsResolver){
-        throw new UnsupportedOperationException("method not implemented yet");
-
+        Claims claims = extractAllClaims(jwt);
+        return claimsResolver.apply(claims);
     }
     public String extractUsername(String jwt) {
-        throw new UnsupportedOperationException("method not implemented yet");
-
+        return extractClaim(jwt, Claims::getSubject);
     }
     public Date extractExpiration(String jwt) {
-        throw new UnsupportedOperationException("method not implemented yet");
+        return extractClaim(jwt, Claims::getExpiration);
     }
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-        throw new UnsupportedOperationException("method not implemented yet");
-
+        return Jwts.builder()
+                .setClaims(extraClaims)
+                .setSubject(userDetails.getUsername())
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24)) // 24h
+                .signWith(signingKey, SignatureAlgorithm.HS256)
+                .compact();
     }
 
     public String generateToken(UserDetails userDetails) {
-        throw new UnsupportedOperationException("method not implemented yet");
-
+        return generateToken(new HashMap<>(), userDetails);
     }
 
     public boolean isTokenValid(String jwt, UserDetails userDetails) {
-        throw new UnsupportedOperationException("method not implemented yet");
-
+        String username = extractUsername(jwt);
+        return !isTokenExpired(jwt) && username.equals(userDetails.getUsername());
     }
 
     public boolean isTokenExpired(String jwt) {
-        throw new UnsupportedOperationException("method not implemented yet");
+        return extractExpiration(jwt).before(new Date());
     }
 
     public String extractToken(HttpServletRequest request) {
-        throw new UnsupportedOperationException("method not implemented yet");
+        String token = request.getParameter("token");
+        if (token != null) {
+            return token;
+        }
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            return authHeader.substring(7);
+        }
+        return null;
+
 
     }
 }
