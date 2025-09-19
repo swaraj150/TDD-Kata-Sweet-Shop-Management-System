@@ -10,7 +10,13 @@ import {
     Button,
     HStack,
     Tooltip ,
+    Menu,
+    MenuButton,
+    MenuList,
+    MenuItem,
+    IconButton,
 } from "@chakra-ui/react";
+import SweetCard from "./SweetCard";
 
 const SweetDashboard = () => {
     // Placeholder sweets
@@ -81,62 +87,62 @@ const SweetDashboard = () => {
             <Box>
                 <SimpleGrid columns={[1, 2, 3]} spacing={6}>
                     {sweets.map((sweet) => (
-                        <Box
-                            key={sweet.id}
-                            borderWidth="1px"
-                            borderRadius="lg"
-                            p={4}
-                            boxShadow="md"
-                            maxW="full"
-                            height="140px"
-                            display="flex"
-                        >
-                            <VStack
-                                spacing={2}
-                                align="start"
-                                justify="space-between"
-                                w="full"
-                                h="full"
-                            >
-                                <Tooltip label={sweet.name} hasArrow>
-                                    <Text
-                                        fontWeight="bold"
-                                        fontSize="lg"
-                                        isTruncated
-                                        maxW="200px"
-                                        textAlign="center"
-                                        mx="auto"
-                                    >
-                                        {sweet.name}
-                                    </Text>
-                                </Tooltip>
-                                <Tooltip label={sweet.category} hasArrow>
-                                    <Text
-                                        color="gray.600"
-                                        fontSize="sm"
-                                        isTruncated
-                                        maxW="200px"
-                                        textAlign="center"
-                                        mx="auto"
-                                    >
-                                        Category: {sweet.category}
-                                    </Text>
-                                </Tooltip>
+                        // <Box
+                        //     key={sweet.id}
+                        //     borderWidth="1px"
+                        //     borderRadius="lg"
+                        //     p={4}
+                        //     boxShadow="md"
+                        //     maxW="full"
+                        //     height="140px"
+                        //     display="flex"
+                        // >
+                        //     <VStack
+                        //         spacing={2}
+                        //         align="start"
+                        //         justify="space-between"
+                        //         w="full"
+                        //         h="full"
+                        //     >
+                        //         <Tooltip label={sweet.name} hasArrow>
+                        //             <Text
+                        //                 fontWeight="bold"
+                        //                 fontSize="lg"
+                        //                 isTruncated
+                        //                 maxW="200px"
+                        //                 textAlign="center"
+                        //                 mx="auto"
+                        //             >
+                        //                 {sweet.name}
+                        //             </Text>
+                        //         </Tooltip>
+                        //         <Tooltip label={sweet.category} hasArrow>
+                        //             <Text
+                        //                 color="gray.600"
+                        //                 fontSize="sm"
+                        //                 isTruncated
+                        //                 maxW="200px"
+                        //                 textAlign="center"
+                        //                 mx="auto"
+                        //             >
+                        //                 Category: {sweet.category}
+                        //             </Text>
+                        //         </Tooltip>
                             
-                                <HStack w="full" justify="space-between" align="center">
-                                    <Text fontWeight="semibold" color="teal.600">
-                                        ₹{sweet.price}
-                                    </Text>
-                                    <Text fontWeight="semibold">
-                                        Stock: {sweet.stockCount}
-                                    </Text>
-
-                                    <Button size="sm" colorScheme="teal">
-                                        Buy
-                                    </Button>
-                                </HStack>
-                            </VStack>
-                        </Box>
+                        //         <HStack w="full" justify="space-between" align="center">
+                        //             <Text fontWeight="semibold" color="teal.600">
+                        //                 ₹{sweet.price}
+                        //             </Text>
+                        //             <Text fontWeight="semibold">
+                        //                 Stock: {sweet.stockCount}
+                        //             </Text>
+                        //             <Button size="sm" colorScheme="teal">
+                        //                 Buy
+                        //             </Button>
+                        //         </HStack>
+                        //     </VStack>
+                        // </Box>
+                        <SweetCard sweet={sweet}/>
                     ))}
                 </SimpleGrid>
             </Box>
