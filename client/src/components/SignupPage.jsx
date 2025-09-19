@@ -11,6 +11,8 @@ import {
     Heading,
 
 } from "@chakra-ui/react";
+import userApi from "../api/modules/user.api";
+import { toast } from 'react-toastify'
 
 const SignUpPage=()=>{
     const {
@@ -19,7 +21,18 @@ const SignUpPage=()=>{
         formState: { errors, isSubmitting },
     } = useForm();
 
-    const onSubmit = () => { };
+    const onSubmit = async(values) => {
+       const {res,err}=await userApi.signup(values);
+       if (res && res.jwtoken && res.email) {
+        localStorage.setItem('jwtoken', res.jwtoken)
+        toast.success('Registration successful! Welcome aboard.')
+        navigate('/home')
+      }
+      if (err) {
+        localStorage.removeItem('jwtoken')
+        toast.error(typeof err === 'string' ? err : 'An error occurred. Please try again.')
+      }
+    };
 
     return (
         <Box

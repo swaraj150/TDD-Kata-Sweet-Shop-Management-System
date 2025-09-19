@@ -1,5 +1,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
+
+import { useNavigate } from 'react-router-dom'
 import {
     Box,
     Button,
@@ -10,14 +12,30 @@ import {
     VStack,
     Heading,
 } from "@chakra-ui/react";
-
+import userApi from "../api/modules/user.api";
+import { toast } from 'react-toastify'
 const SignInPage=()=>{
+    
+  const navigate = useNavigate()
     const {
         register,
         handleSubmit,
         formState: { errors, isSubmitting },
     } = useForm();
-    const onSubmit = () => { };
+    const onSubmit = async(values) => {
+       const {res,err}=await userApi.signin(values);
+       console.log(res)
+       console.log(err)
+       if (res && res.jwtToken && res.email) {
+        localStorage.setItem('jwtoken', res.jwtoken)
+        toast.success('Login successful! Welcome Back.')
+        navigate('/home')
+      }
+      if (err) {
+        localStorage.removeItem('jwtoken')
+        toast.error(typeof err === 'string' ? err : 'An error occurred. Please try again.')
+      }
+    };
 
     return (
         <Box
