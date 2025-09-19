@@ -4,6 +4,7 @@ import com.sweetshop.server.dto.user.request.CreateUserRequest;
 import com.sweetshop.server.dto.user.request.LoginUserRequest;
 import com.sweetshop.server.dto.user.response.UserResponse;
 import com.sweetshop.server.entity.User;
+import com.sweetshop.server.entity.UserRole;
 import com.sweetshop.server.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +34,12 @@ public class UserService {
         user.setEmail(request.getEmail());
         user.setPhoneNumber(request.getPhoneNumber());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+        if(request.getRole() !=null && request.getRole().equals("ADMIN")){
+            user.setRole(UserRole.ADMIN);
+        }
+        else{
+            user.setRole(UserRole.USER);
+        }
         userRepository.save(user);
         String jwtToken=jwtService.generateToken(user);
         return UserResponse.toUserResponse(user,jwtToken);
