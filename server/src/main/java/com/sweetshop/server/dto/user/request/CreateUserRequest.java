@@ -28,4 +28,6 @@ public class CreateUserRequest {
 
     @Pattern(regexp = "\\d{10}", message = "Phone number must be 10 digits")
     private String phoneNumber;
+
+    private String role;
 }
