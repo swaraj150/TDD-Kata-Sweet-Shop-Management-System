@@ -6,6 +6,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import SignUpPage from './components/SignupPage';
 import { publicRoutes } from './routes/Routes';
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { ToastContainer } from 'react-toastify'
 function App() {
   const [count, setCount] = useState(0)
   const handleSignIn = (data) => {
@@ -18,8 +19,22 @@ function App() {
     // call backend register API here
   };
   return (
-      
+    <>
+      <ToastContainer
+        position='top-center'
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme='light'
+        transition:Bounce
+      />
       <ChakraProvider>
+        
         <BrowserRouter>
           <Routes>
             {
@@ -32,6 +47,7 @@ function App() {
         
         </BrowserRouter>
       </ChakraProvider>
+    </>
 
     
   )
