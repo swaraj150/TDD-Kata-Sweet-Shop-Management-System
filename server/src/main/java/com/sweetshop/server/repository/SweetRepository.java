@@ -20,7 +20,7 @@ public interface SweetRepository extends JpaRepository<Sweet,Long> {
     List<Sweet> findByCategory(String name);
 
     @Query("SELECT s FROM Sweet s WHERE " +
-            "(:name IS NULL OR LOWER(s.name) LIKE LOWER(CONCAT('%', :name, '%'))) AND " +
+            "(:name IS NULL OR LOWER(s.name) LIKE LOWER(%:name%)) AND " +
             "(:category IS NULL OR LOWER(s.category) = LOWER(:category)) AND " +
             "(:minPrice IS NULL OR s.price >= :minPrice) AND " +
             "(:maxPrice IS NULL OR s.price <= :maxPrice)")

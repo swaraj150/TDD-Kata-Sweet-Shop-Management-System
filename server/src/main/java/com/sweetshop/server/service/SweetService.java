@@ -79,19 +79,7 @@ public class SweetService {
         sweetRepository.deleteById(id);
     }
 
-    public void purchaseSweet(Long id, UpdateSweetInventoryRequest request){
-        UserResponse user=userService.loadCurrentUser();
-        if(!user.getRole().hasAuthority(UserAuthority.PURCHASE_SWEET)){
-            throw new UnauthorizedAccessException("User does not have the required authority");
-        }
-        Sweet sweet=loadSweetById(id);
-        if(sweet.getStockCount()>0){
-            sweet.setStockCount(sweet.getStockCount()-1);
-            sweetRepository.save(sweet);
-        }else{
-            throw new IllegalStateException("No sweets left");
-        }
-    }
+
     public void updateInventory(Long id,Integer stock){
         UserResponse user=userService.loadCurrentUser();
         if(!user.getRole().hasAuthority(UserAuthority.UPDATE_INVENTORY)){
