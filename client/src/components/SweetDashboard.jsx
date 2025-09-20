@@ -24,12 +24,15 @@ const SweetDashboard = () => {
     const [categories, setCategories] = useState([]);
     const { user, setUser } = useUser();
     const [isAdmin, setIsAdmin] = useState(false);
-    const [filters, setFilters] = useState({
+    const defaultFilter = {
         name: "",
         category: "",
         minPrice: "",
         maxPrice: "",
-    })
+
+    }
+    const [filters, setFilters] = useState(defaultFilter);
+    const [fetch, setFetch] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -40,8 +43,11 @@ const SweetDashboard = () => {
             }
             if (err) toast.error(typeof err === 'string' ? err : 'An error occurred. Please try again.')
         }
-        fetchData();
-    }, [])
+        if (fetch) {
+            fetchData();
+            setFetch(false);
+        }
+    }, [fetch])
 
     useEffect(() => {
         if (user) {
@@ -65,18 +71,25 @@ const SweetDashboard = () => {
             Object.entries(obj).filter(([_, v]) => v != null && v !== "" && v != undefined)
         );
     }
+
+    const clearFilters = () => {
+        if (!fetch) setFetch(true);
+        setFilters(defaultFilter);
+    }
+    const checkFilters = () => {
+        return (filters.name == "" && filters.category == "" && filters.maxPrice == "" && filters.minPrice == "");
+    }
+
     const applyFilters = async () => {
         const params = cleanFilters(filters)
-        console.log(params)
         const { res, err } = await sweetApi.search(params);
         if (res) {
             setSweets(res);
         }
         if (err) toast.error(typeof err === 'string' ? err : 'An error occurred. Please try again.')
     };
-    const checkFilters = () => {
-        return (!filters.name && !filters.category && !filters.maxPrice && !filters.minPrice);
-    }
+
+
 
 
     const handleOnBuyClick = async (id, quantity, factor = -1) => {
@@ -130,17 +143,52 @@ const SweetDashboard = () => {
                 bg="gray.50"
             >
                 <HStack spacing={2} align="flex-end">
-                    <Input placeholder="Search by name" w="30%" onChange={(e) => handleChange(e, "name")} />
-                    <Select placeholder="Category" w="20%" onChange={(e) => handleChange(e, "category")}>
-                        {categories.map((category) => {
-                            return (
-                                <option value={category}>{category}</option>
-                            )
-                        })}
+                    <Input
+                        placeholder="Search by name"
+                        w="30%"
+                        value={filters.name}
+                        onChange={(e) => handleChange(e, "name")}
+                    />
+                    <Select
+                        placeholder="Category"
+                        w="20%"
+                        value={filters.category}
+                        onChange={(e) => handleChange(e, "category")}
+                    >
+                        {categories.map((category) => (
+                            <option key={category} value={category}>
+                                {category}
+                            </option>
+                        ))}
                     </Select>
-                    <Input type="number" placeholder="Min Price" w="20%" onChange={(e) => handleChange(e, "minPrice")} />
-                    <Input type="number" placeholder="Max Price" w="20%" onChange={(e) => handleChange(e, "maxPrice")} />
-                    <Button colorScheme="teal" w="10%" onClick={applyFilters} isDisabled={checkFilters()}>Filter</Button>
+                    <Input
+                        type="number"
+                        placeholder="Min Price"
+                        w="20%"
+                        value={filters.minPrice}
+                        onChange={(e) => handleChange(e, "minPrice")}
+                    />
+                    <Input
+                        type="number"
+                        placeholder="Max Price"
+                        w="20%"
+                        value={filters.maxPrice}
+                        onChange={(e) => handleChange(e, "maxPrice")}
+                    />
+                    <Button
+                        colorScheme="teal"
+                        w="10%"
+                        onClick={applyFilters}
+                        isDisabled={checkFilters()}
+                    >
+                        Filter
+                    </Button>
+                    <Button
+                        colorScheme="teal"
+                        w="10%"
+                        onClick={clearFilters} >
+                        Reset
+                    </Button>
                 </HStack>
             </Box>
 
