@@ -3,6 +3,7 @@ package com.sweetshop.server.service;
 import com.sweetshop.server.dto.sweet.request.CreateSweetRequest;
 import com.sweetshop.server.dto.sweet.request.UpdateSweetInventoryRequest;
 import com.sweetshop.server.dto.sweet.request.UpdateSweetRequest;
+import com.sweetshop.server.dto.sweet.response.SweetDashboardResponse;
 import com.sweetshop.server.dto.sweet.response.SweetResponse;
 import com.sweetshop.server.dto.user.response.UserResponse;
 import com.sweetshop.server.entity.Sweet;
@@ -101,8 +102,26 @@ public class SweetService {
                 .collect(Collectors.toSet());
     }
 
+    public Set<String> loadAllCategories(){
+        return sweetRepository.findAll()
+                .stream()
+                .map(Sweet::getCategory)
+                .collect(Collectors.toSet());
+    }
+
+    public SweetDashboardResponse loadDashboard(){
+        return sweetRepository.findAll()
+                .stream()
+                .collect(Collectors.teeing(
+                        Collectors.mapping(SweetResponse::toSweetResponse, Collectors.toSet()),
+                        Collectors.mapping(Sweet::getCategory, Collectors.toSet()),
+                        SweetDashboardResponse::new
+                ));
+    }
+
     public Set<SweetResponse> searchSweets(String name, String category, Double minPrice, Double maxPrice){
-        return sweetRepository.search(name, category, minPrice, maxPrice)
+        String nameSearch=(name == null) ? null : "%" + name.toLowerCase() + "%";
+        return sweetRepository.search(nameSearch, category, minPrice, maxPrice)
                 .stream()
                 .map(SweetResponse::toSweetResponse)
                 .collect(Collectors.toSet());

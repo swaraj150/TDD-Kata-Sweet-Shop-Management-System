@@ -3,6 +3,7 @@ package com.sweetshop.server.controller;
 import com.sweetshop.server.dto.sweet.request.CreateSweetRequest;
 import com.sweetshop.server.dto.sweet.request.UpdateSweetInventoryRequest;
 import com.sweetshop.server.dto.sweet.request.UpdateSweetRequest;
+import com.sweetshop.server.dto.sweet.response.SweetDashboardResponse;
 import com.sweetshop.server.dto.sweet.response.SweetResponse;
 import com.sweetshop.server.service.SweetService;
 import lombok.NonNull;
@@ -10,10 +11,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/api/v1/sweets")
+@RequestMapping("/api/sweets")
 @RequiredArgsConstructor
 public class SweetController {
     private final SweetService sweetService;
@@ -33,8 +36,8 @@ public class SweetController {
         return ResponseEntity.ok("Sweet deleted successfully");
     }
     @GetMapping("")
-    public ResponseEntity<Set<SweetResponse>> getAllSweets(){
-        return ResponseEntity.ok(sweetService.loadAllSweets());
+    public ResponseEntity<SweetDashboardResponse> getAllSweets(){
+        return ResponseEntity.ok(sweetService.loadDashboard());
     }
     @GetMapping("/search")
     public ResponseEntity<Set<SweetResponse>> searchSweets(
