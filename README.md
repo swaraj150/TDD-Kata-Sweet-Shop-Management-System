@@ -44,15 +44,15 @@ Admins can manage sweets, while customers can browse and buy them.
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/your-username/sweet-shop.git
-cd sweet-shop
+git clone https://github.com/swaraj150/TDD-Kata-Sweet-Shop-Management-System.git
+cd TDD-Kata-Sweet-Shop-Management-System
 ```
 
 ### 2. Backend Setup (Spring Boot)
 
 Navigate to backend:
 ```bash
-cd backend
+cd server
 ```
 
 Configure your database in `application.properties`:
@@ -66,7 +66,8 @@ spring.jpa.show-sql=true
 
 Run backend:
 ```bash
-./mvnw spring-boot:run
+./mvnw clean install -DskipTests
+./mvnw spring-boot:run  
 ```
 Backend will be available at: http://localhost:8080
 
@@ -74,7 +75,7 @@ Backend will be available at: http://localhost:8080
 
 Navigate to frontend:
 ```bash
-cd frontend
+cd client
 ```
 
 Install dependencies:
