@@ -24,31 +24,31 @@ const WelcomePage = () => {
       navigate("/home");
     }
   },[])
-  return (
-    <Box
-      minH="100vh"
-      display="flex"
-      alignItems="center"
-      justifyContent="center"
-      bg={bgGradient}
-      px={4}
-    >
+    return (
       <Box
-        bg={useColorModeValue("white", "gray.700")}
-        p={[6, 10]}
-        borderRadius="xl"
-        boxShadow="xl"
-        maxW={["90%", "500px", "700px"]}
-        w="full"
-        textAlign="center"
+        minH="100vh"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        bg={bgGradient}
+        px={4}
       >
-        <VStack spacing={[4, 6]}>
-          <Image
-            src="/logo.png" 
-            alt="Sweet Logo"
-            boxSize={["80px", "120px"]}
-            mb={2}
-          />
+        <Box
+          bg={useColorModeValue("white", "gray.700")}
+          p={[6, 10]}
+          borderRadius="xl"
+          boxShadow="xl"
+          maxW={["90%", "500px", "700px"]}
+          w="full"
+          textAlign="center"
+        >
+          <VStack spacing={[4, 6]}>
+            <Image
+              src="./images.jpg" 
+              alt="Sweet Logo"
+              boxSize={["80px", "140px"]}
+              mb={2}
+            />
 
           <Heading size={["lg", "2xl"]} color={useColorModeValue("gray.800", "white")}>
             Welcome to SweetShop!
