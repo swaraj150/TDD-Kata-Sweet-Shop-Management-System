@@ -112,37 +112,47 @@ Note: Sweet module related tests involve security and dynamic user contexts, whi
 
 Replace these with actual screenshots from your app
 - Welcome Page
- <img width="1920" height="878" alt="Screenshot 2025-09-20 at 20-43-45 Sweet shop" src="https://github.com/user-attachments/assets/8baf33f3-9f60-42f1-b837-13c147d50b2c" />
+  
+  <img width="1920" height="878" alt="Screenshot 2025-09-20 at 20-43-45 Sweet shop" src="https://github.com/user-attachments/assets/8baf33f3-9f60-42f1-b837-13c147d50b2c" />
 
 - Sweet Dashboard (Normal user view)
+  
   <img width="1920" height="878" alt="Screenshot 2025-09-20 at 20-00-04 Sweet shop" src="https://github.com/user-attachments/assets/8b53b595-8cae-4fa0-a1ce-a0eb824c3b79" />
 
 - Sweet Dashboard (Admin user view)
-<img width="1920" height="878" alt="Screenshot 2025-09-20 at 20-10-18 Sweet shop" src="https://github.com/user-attachments/assets/6d67488b-1944-4835-821b-85c1ad383401" />
+  
+  <img width="1920" height="878" alt="Screenshot 2025-09-20 at 20-10-18 Sweet shop" src="https://github.com/user-attachments/assets/6d67488b-1944-4835-821b-85c1ad383401" />
   
 - Sweet purchase
+  
   <img width="1920" height="878" alt="Screenshot 2025-09-20 at 20-22-11 Sweet shop" src="https://github.com/user-attachments/assets/733ca61c-ee58-49d3-a9da-6cef088d05c2" />
 
 - Sweet Restock
   <img width="1920" height="878" alt="Screenshot 2025-09-20 at 20-11-15 Sweet shop" src="https://github.com/user-attachments/assets/823eb85a-cc0f-483b-aa49-462b7a60fe65" />
 
 - Sign up (error)
+  
   <img width="1920" height="878" alt="Screenshot 2025-09-20 at 20-13-15 Sweet shop" src="https://github.com/user-attachments/assets/048cea82-5f3e-46cd-a50f-5459d49279c4" />
 
 - Sign up(Success)
+  
   <img width="1920" height="878" alt="Screenshot 2025-09-20 at 20-16-33 Sweet shop" src="https://github.com/user-attachments/assets/b3024798-95bc-49d5-ae68-30ac750f8cec" />
 
 - Update Sweet form
+  
   <img width="1920" height="878" alt="Screenshot 2025-09-20 at 20-11-31 Sweet shop" src="https://github.com/user-attachments/assets/e07ba45c-5e9f-492d-9773-8e3ad8ce15c7" />
 
 - Create Sweet form
+  
   <img width="1920" height="878" alt="Screenshot 2025-09-20 at 20-11-46 Sweet shop" src="https://github.com/user-attachments/assets/10882754-9a8c-4861-98b5-6797b554a07a" />
 
 - Filters
+  
   <img width="1920" height="878" alt="Screenshot 2025-09-20 at 20-01-07 Sweet shop" src="https://github.com/user-attachments/assets/b6f2ee19-87b5-47e3-9605-b20dee6d1c5a" />
 
 - Not found page
-<img width="1920" height="878" alt="Screenshot 2025-09-20 at 20-22-31 Sweet shop" src="https://github.com/user-attachments/assets/7c96633a-6516-4718-ae14-0eb54f8731c8" />
+  
+  <img width="1920" height="878" alt="Screenshot 2025-09-20 at 20-22-31 Sweet shop" src="https://github.com/user-attachments/assets/7c96633a-6516-4718-ae14-0eb54f8731c8" />
 
 
 
