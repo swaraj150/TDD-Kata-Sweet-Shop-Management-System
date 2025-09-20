@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     Box,
     Heading,
@@ -9,7 +9,7 @@ import {
     Select,
     Button,
     HStack,
-    Tooltip ,
+    Tooltip,
     Menu,
     MenuButton,
     MenuList,
@@ -17,49 +17,65 @@ import {
     IconButton,
 } from "@chakra-ui/react";
 import SweetCard from "./SweetCard";
+import sweetApi from "../api/modules/sweet.api";
+import { toast } from 'react-toastify'
+
 
 const SweetDashboard = () => {
     // Placeholder sweets
-    const allSweets = [
-        { id: 1, name: "Gulab Jamunlfvnslvnsdnvksnvfjnkskdgs", category: "Indian", price: 120, stockCount: 50 },
-        { id: 2, name: "Ladoo", category: "Indian", price: 100, stockCount: 70 },
-        { id: 3, name: "Brownie", category: "Western", price: 200, stockCount: 30 },
-        { id: 4, name: "Donut", category: "Bakery", price: 150, stockCount: 25 },
-        { id: 5, name: "Donut", category: "Bakery", price: 150, stockCount: 25 },
-        { id: 6, name: "Donut", category: "Bakery", price: 150, stockCount: 25 },
-        { id: 7, name: "Donut", category: "Bakery", price: 150, stockCount: 25 },
-    ];
+    // const allSweets = [
+    //     { id: 1, name: "Gulab Jamunlfvnslvnsdnvksnvfjnkskdgs", category: "Indian", price: 120, stockCount: 50 },
+    //     { id: 2, name: "Ladoo", category: "Indian", price: 100, stockCount: 70 },
+    //     { id: 3, name: "Brownie", category: "Western", price: 200, stockCount: 30 },
+    //     { id: 4, name: "Donut", category: "Bakery", price: 150, stockCount: 25 },
+    //     { id: 5, name: "Donut", category: "Bakery", price: 150, stockCount: 25 },
+    //     { id: 6, name: "Donut", category: "Bakery", price: 150, stockCount: 25 },
+    //     { id: 7, name: "Donut", category: "Bakery", price: 150, stockCount: 25 },
+    // ];
+    const [sweets, setSweets] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [filters, setFilters] = useState({
+        name: "",
+        category: "",
+        minPrice: "",
+        maxPrice: "",
+    })
 
-    const [sweets, setSweets] = useState(allSweets);
-    const [search, setSearch] = useState("");
-    const [category, setCategory] = useState("");
-    const [minPrice, setMinPrice] = useState("");
-    const [maxPrice, setMaxPrice] = useState("");
-
-    // Filter sweets locally
-    const applyFilters = () => {
-        let filtered = allSweets;
-
-        if (search) {
-            filtered = filtered.filter((s) =>
-                s.name.toLowerCase().includes(search.toLowerCase())
-            );
+    useEffect(() => {
+        const fetchData = async () => {
+            const { res, err } = await sweetApi.getAll();
+            if (res) {
+                setSweets(res.sweets);
+                setCategories(res.categories);
+            }
+            if (err) toast.error(typeof err === 'string' ? err : 'An error occurred. Please try again.')
         }
+        fetchData();
+    }, [])
 
-        if (category) {
-            filtered = filtered.filter((s) => s.category === category);
+    const handleChange = (event, field) => {
+        setFilters(f => ({
+            ...f,
+            [field]: event.target.value
+        }))
+    }
+    function cleanFilters(obj) {
+        return Object.fromEntries(
+            Object.entries(obj).filter(([_, v]) => v != null && v !== "" && v!=undefined)
+        );
+    }
+    const applyFilters = async () => {
+        const params = cleanFilters(filters)
+        console.log(params)
+        const { res, err } = await sweetApi.search(params);
+        if (res) {
+            setSweets(res);
         }
-
-        if (minPrice) {
-            filtered = filtered.filter((s) => s.price >= parseFloat(minPrice));
-        }
-
-        if (maxPrice) {
-            filtered = filtered.filter((s) => s.price <= parseFloat(maxPrice));
-        }
-
-        setSweets(filtered);
+        if (err) toast.error(typeof err === 'string' ? err : 'An error occurred. Please try again.')
     };
+    const checkFilters = () => {
+        return (!filters.name && !filters.category && !filters.maxPrice && !filters.minPrice);
+    }
     return (
         <VStack spacing={6} align="stretch" p={6}>
             <Heading mb={6} textAlign="center">
@@ -73,76 +89,24 @@ const SweetDashboard = () => {
                 bg="gray.50"
             >
                 <HStack spacing={2} align="flex-end">
-                    <Input placeholder="Search by name" w="30%" />
-                    <Select placeholder="Category" w="20%">
-                        <option value="Indian">Indian</option>
-                        <option value="Bengali">Bengali</option>
+                    <Input placeholder="Search by name" w="30%" onChange={(e) => handleChange(e, "name")} />
+                    <Select placeholder="Category" w="20%" onChange={(e) => handleChange(e, "category")}>
+                        {categories.map((category) => {
+                            return (
+                                <option value={category}>{category}</option>
+                            )
+                        })}
                     </Select>
-                    <Input type="number" placeholder="Min Price" w="20%" />
-                    <Input type="number" placeholder="Max Price" w="20%" />
-                    <Button colorScheme="teal" w="10%">Filter</Button>
+                    <Input type="number" placeholder="Min Price" w="20%" onChange={(e) => handleChange(e, "minPrice")} />
+                    <Input type="number" placeholder="Max Price" w="20%" onChange={(e) => handleChange(e, "maxPrice")} />
+                    <Button colorScheme="teal" w="10%" onClick={applyFilters} isDisabled={checkFilters()}>Filter</Button>
                 </HStack>
             </Box>
 
             <Box>
                 <SimpleGrid columns={[1, 2, 3]} spacing={6}>
                     {sweets.map((sweet) => (
-                        // <Box
-                        //     key={sweet.id}
-                        //     borderWidth="1px"
-                        //     borderRadius="lg"
-                        //     p={4}
-                        //     boxShadow="md"
-                        //     maxW="full"
-                        //     height="140px"
-                        //     display="flex"
-                        // >
-                        //     <VStack
-                        //         spacing={2}
-                        //         align="start"
-                        //         justify="space-between"
-                        //         w="full"
-                        //         h="full"
-                        //     >
-                        //         <Tooltip label={sweet.name} hasArrow>
-                        //             <Text
-                        //                 fontWeight="bold"
-                        //                 fontSize="lg"
-                        //                 isTruncated
-                        //                 maxW="200px"
-                        //                 textAlign="center"
-                        //                 mx="auto"
-                        //             >
-                        //                 {sweet.name}
-                        //             </Text>
-                        //         </Tooltip>
-                        //         <Tooltip label={sweet.category} hasArrow>
-                        //             <Text
-                        //                 color="gray.600"
-                        //                 fontSize="sm"
-                        //                 isTruncated
-                        //                 maxW="200px"
-                        //                 textAlign="center"
-                        //                 mx="auto"
-                        //             >
-                        //                 Category: {sweet.category}
-                        //             </Text>
-                        //         </Tooltip>
-                            
-                        //         <HStack w="full" justify="space-between" align="center">
-                        //             <Text fontWeight="semibold" color="teal.600">
-                        //                 ₹{sweet.price}
-                        //             </Text>
-                        //             <Text fontWeight="semibold">
-                        //                 Stock: {sweet.stockCount}
-                        //             </Text>
-                        //             <Button size="sm" colorScheme="teal">
-                        //                 Buy
-                        //             </Button>
-                        //         </HStack>
-                        //     </VStack>
-                        // </Box>
-                        <SweetCard sweet={sweet}/>
+                        <SweetCard key={sweet.id} sweet={sweet} />
                     ))}
                 </SimpleGrid>
             </Box>

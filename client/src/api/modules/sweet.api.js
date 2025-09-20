@@ -55,16 +55,11 @@ const sweetApi = {
             return { err }
         }
     },
-    search: async ({ name, category, minPrice, maxPrice }) => {
+    search: async (params) => {
         try {
             const res = await privateClient.get(
                 sweetEndpoints.search, {
-                params: {
-                    name,
-                    category,
-                    minPrice,
-                    maxPrice,
-                },
+                params:params
             })
             return { res }
         } catch (err) {
