@@ -8,17 +8,22 @@ import {
     Select,
     Button,
     HStack,
-    
+
 } from "@chakra-ui/react";
 import SweetCard from "./SweetCard";
 import sweetApi from "../api/modules/sweet.api";
 import { toast } from 'react-toastify'
+import { useUser } from "../context/UserContext";
+import Header from "./Header";
+import { useNavigate } from "react-router-dom";
 
 
 const SweetDashboard = () => {
-    
+    const navigate = useNavigate();
     const [sweets, setSweets] = useState([]);
     const [categories, setCategories] = useState([]);
+    const { user, setUser } = useUser();
+    const [isAdmin, setIsAdmin] = useState(false);
     const [filters, setFilters] = useState({
         name: "",
         category: "",
@@ -38,6 +43,14 @@ const SweetDashboard = () => {
         fetchData();
     }, [])
 
+    useEffect(() => {
+        if (user) {
+            setIsAdmin(user.role == "ADMIN");
+        }
+        else {
+            setIsAdmin(false);
+        }
+    }, [user])
 
     const handleChange = (event, field) => {
         setFilters(f => ({
@@ -66,19 +79,19 @@ const SweetDashboard = () => {
     }
 
 
-    const handleOnBuyClick = async (id,quantity,factor=-1) => {
-        const { res, err } = await sweetApi.purchase({ id: id, stock: quantity*(factor) });
+    const handleOnBuyClick = async (id, quantity, factor = -1) => {
+        const { res, err } = await sweetApi.purchase({ id: id, stock: quantity * (factor) });
         if (res) {
             setSweets((prevSweets) =>
                 prevSweets.map((sweet) => (sweet.id === id ? res : sweet))
             );
-            toast.success("Sweet purchased!");
+            toast.success(`Sweet ${factor == -1 ? "Purchased!" : "Restocked!"}`);
         }
         if (err) toast.error(typeof err === 'string' ? err : 'An error occurred. Please try again.')
 
     }
-    const handleOnUpdateClick = async (id) => {
-        // Navigate("/")
+    const handleOnUpdateClick = async (sweet) => {
+        navigate("/sweet-form", { state: { sweet } });
     }
 
     const handleOnDeleteClick = async (id) => {
@@ -94,9 +107,7 @@ const SweetDashboard = () => {
 
     return (
         <VStack spacing={6} align="stretch" p={6}>
-            <Heading mb={6} textAlign="center">
-                Sweet Dashboard
-            </Heading>
+            <Header />
             <Box
                 borderWidth="1px"
                 borderRadius="lg"
@@ -120,11 +131,25 @@ const SweetDashboard = () => {
             </Box>
 
             <Box>
-                <SimpleGrid columns={[1, 2, 3]} spacing={6}>
-                    {sweets.map((sweet) => (
-                        <SweetCard key={sweet.id} sweet={sweet} onBuyClick={handleOnBuyClick} onUpdateClick={handleOnUpdateClick} onDeleteClick={handleOnDeleteClick} isAdmin={false}/>
-                    ))}
-                </SimpleGrid>
+                {sweets.length === 0 ? (
+                    <Box textAlign="center" py={10} color="gray.500" fontWeight="medium">
+                        No sweets to display 🍬
+                    </Box>
+                ) : (
+                    <SimpleGrid columns={[1, 2, 3]} spacing={6}>
+                        {sweets.map((sweet) => (
+                            <SweetCard
+                                key={sweet.id}
+                                sweet={sweet}
+                                onBuyClick={handleOnBuyClick}
+                                onUpdateClick={handleOnUpdateClick}
+                                onDeleteClick={handleOnDeleteClick}
+                                isAdmin={isAdmin}
+                            />
+                        ))}
+                    </SimpleGrid>
+                )}
+
             </Box>
         </VStack>
     );
