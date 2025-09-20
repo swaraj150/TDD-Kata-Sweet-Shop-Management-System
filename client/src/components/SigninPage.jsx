@@ -14,27 +14,31 @@ import {
 } from "@chakra-ui/react";
 import userApi from "../api/modules/user.api";
 import { toast } from 'react-toastify'
-const SignInPage=()=>{
-    
-  const navigate = useNavigate()
+import { useUser } from "../context/UserContext";
+
+const SignInPage = () => {
+
+    const navigate = useNavigate()
+    const { user, setUser } = useUser();
+
     const {
         register,
         handleSubmit,
         formState: { errors, isSubmitting },
     } = useForm();
-    const onSubmit = async(values) => {
-       const {res,err}=await userApi.signin(values);
-       console.log(res)
-       console.log(err)
-       if (res && res.jwtToken && res.email) {
-        localStorage.setItem('jwtoken', res.jwtoken)
-        toast.success('Login successful! Welcome Back.')
-        navigate('/home')
-      }
-      if (err) {
-        localStorage.removeItem('jwtoken')
-        toast.error(typeof err === 'string' ? err : 'An error occurred. Please try again.')
-      }
+    const onSubmit = async (values) => {
+        const { res, err } = await userApi.signin(values);
+        
+        if (res && res.jwtToken && res.email) {
+            localStorage.setItem('jwtToken', res.jwtToken)
+            toast.success('Login successful! Welcome Back.')
+            navigate('/home')
+            setUser({name:res.name, role:res.role})
+        }
+        if (err) {
+            localStorage.removeItem('jwtoken')
+            toast.error(typeof err === 'string' ? err : 'An error occurred. Please try again.')
+        }
     };
 
     return (
