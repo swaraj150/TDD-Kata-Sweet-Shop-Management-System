@@ -22,10 +22,10 @@ privateClient.interceptors.request.use(async (config) => {
     ...config,
     headers: {
       ...(isFormData
-        ? { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+        ? { 'Authorization': `Bearer ${localStorage.getItem('jwtToken')}` }
         : {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
+            'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
           })
     }
   }
