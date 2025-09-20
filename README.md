@@ -100,6 +100,14 @@ Insert an admin user for testing:
 
 ---
 
+### 5. Test Reports
+
+You can view the backend test reports here:
+
+[Surefire HTML Report](target/surefire-reports/html/index.html)
+
+Note: Sweet module related tests involve security and dynamic user contexts, which made unit testing with mocks complex. In future iterations, these tests can be fully automated using integration tests with an in-memory database or proper Spring Security context setup.
+
 ## 🖼️ Screenshots
 
 Replace these with actual screenshots from your app
