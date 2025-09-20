@@ -25,6 +25,7 @@ const SweetCard = ({ sweet, onBuyClick, onUpdateClick, onDeleteClick, isAdmin })
             setShowMenu(true);
         }
     }, [isAdmin])
+      
     return (
         <Box
             key={sweet.id}
@@ -33,50 +34,56 @@ const SweetCard = ({ sweet, onBuyClick, onUpdateClick, onDeleteClick, isAdmin })
             p={4}
             boxShadow="md"
             maxW="full"
-            height="140px"
+            height="175px"
             display="flex"
             alignItems="center"
             justifyContent="space-between"
         >
-            <VStack spacing={1} align="start" flex="1">
-                <Tooltip label={sweet.name} hasArrow>
-                    <Text fontWeight="bold" fontSize="lg" isTruncated maxW="180px">
-                        {sweet.name}
-                    </Text>
-                </Tooltip>
+            <VStack spacing={2} align="start" flex="1" >
+                <HStack spacing={10}>
+                    <Tooltip label={sweet.name} hasArrow >
+                        <Text fontWeight="bold" fontSize="lg" isTruncated maxW="180px" mr={4}>
+                            {sweet.name}
+                        </Text>
+                    </Tooltip>
+                    <Menu>
+                        <MenuButton
+                            as={IconButton}
+                            icon={<FiMoreVertical />}
+                            variant="ghost"
+                            size="sm"
+                            disabled={!showMenu}
+                        />
+                        <MenuList>
+                            <MenuItem onClick={() => onUpdateClick(sweet)}>Update Sweet</MenuItem>
+                            <MenuItem onClick={() => onDeleteClick(sweet.id)} color="red.500">Delete Sweet</MenuItem>
+
+                        </MenuList>
+                    </Menu>
+
+                </HStack>
                 <Text color="gray.600">Category: {sweet.category}</Text>
 
-                <HStack spacing={4}>
+                <HStack spacing={5} >
                     <Text fontWeight="semibold" color="teal.600">
                         ₹{sweet.price}
                     </Text>
-                    <Text fontWeight="semibold">Stock: {sweet.stockCount}</Text>
+                    <Text w="75px" fontWeight="semibold">Stock: {sweet.stockCount}</Text>
                     <QuantityStepper value={quantity} setValue={setQuantity} min={1} max={100} />
                 </HStack>
+                 <Button colorScheme="teal" size="sm" onClick={() => onBuyClick(sweet.id, quantity, showMenu ? (1) : (-1))} isDisabled={!(buttonType=="Buy" && sweet?.stockCount)}>
+                    {buttonType}
+                </Button>
             </VStack>
 
             <VStack spacing={6}>
 
-                <Menu>
-                    <MenuButton
-                        as={IconButton}
-                        icon={<FiMoreVertical />}
-                        variant="ghost"
-                        size="sm"
-                        // visibility={showMenu ? "visible" : "hidden"}
-                        disabled={!showMenu}
-                    />
-                    <MenuList>
-                        <MenuItem onClick={() => onUpdateClick(sweet.id)}>Update Sweet</MenuItem>
-                        <MenuItem onClick={() => onDeleteClick(sweet.id)} color="red.500">Delete Sweet</MenuItem>
+                
 
-                    </MenuList>
-                </Menu>
-
-                <Button colorScheme="teal" size="sm" onClick={() => onBuyClick(sweet.id, quantity, showMenu ? (-1) : (1))} disabled={quantity <= 0}>
-                    {buttonType}
-                </Button>
+               
             </VStack>
+
+
         </Box>
     );
 };
