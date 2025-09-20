@@ -80,14 +80,28 @@ const SweetDashboard = () => {
 
 
     const handleOnBuyClick = async (id, quantity, factor = -1) => {
-        const { res, err } = await sweetApi.purchase({ id: id, stock: quantity * (factor) });
-        if (res) {
-            setSweets((prevSweets) =>
-                prevSweets.map((sweet) => (sweet.id === id ? res : sweet))
-            );
-            toast.success(`Sweet ${factor == -1 ? "Purchased!" : "Restocked!"}`);
+        if (factor == -1) {
+            const { res, err } = await sweetApi.purchase({ id: id, stock: quantity * (factor) });
+            if (res) {
+                setSweets((prevSweets) =>
+                    prevSweets.map((sweet) => (sweet.id === id ? res : sweet))
+                );
+                toast.success(`Sweet Purchased!`);
+            }
+            if (err) toast.error(typeof err === 'string' ? err : 'An error occurred. Please try again.')
+
         }
-        if (err) toast.error(typeof err === 'string' ? err : 'An error occurred. Please try again.')
+        else {
+            const { res, err } = await sweetApi.restock({ id: id, stock: quantity * (factor) });
+            if (res) {
+                setSweets((prevSweets) =>
+                    prevSweets.map((sweet) => (sweet.id === id ? res : sweet))
+                );
+                toast.success(`Sweet Restock!`);
+            }
+            if (err) toast.error(typeof err === 'string' ? err : 'An error occurred. Please try again.')
+
+        }
 
     }
     const handleOnUpdateClick = async (sweet) => {
