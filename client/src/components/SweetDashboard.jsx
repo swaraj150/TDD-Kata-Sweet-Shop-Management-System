@@ -3,18 +3,12 @@ import {
     Box,
     Heading,
     SimpleGrid,
-    Text,
     VStack,
     Input,
     Select,
     Button,
     HStack,
-    Tooltip,
-    Menu,
-    MenuButton,
-    MenuList,
-    MenuItem,
-    IconButton,
+    
 } from "@chakra-ui/react";
 import SweetCard from "./SweetCard";
 import sweetApi from "../api/modules/sweet.api";
@@ -22,16 +16,7 @@ import { toast } from 'react-toastify'
 
 
 const SweetDashboard = () => {
-    // Placeholder sweets
-    // const allSweets = [
-    //     { id: 1, name: "Gulab Jamunlfvnslvnsdnvksnvfjnkskdgs", category: "Indian", price: 120, stockCount: 50 },
-    //     { id: 2, name: "Ladoo", category: "Indian", price: 100, stockCount: 70 },
-    //     { id: 3, name: "Brownie", category: "Western", price: 200, stockCount: 30 },
-    //     { id: 4, name: "Donut", category: "Bakery", price: 150, stockCount: 25 },
-    //     { id: 5, name: "Donut", category: "Bakery", price: 150, stockCount: 25 },
-    //     { id: 6, name: "Donut", category: "Bakery", price: 150, stockCount: 25 },
-    //     { id: 7, name: "Donut", category: "Bakery", price: 150, stockCount: 25 },
-    // ];
+    
     const [sweets, setSweets] = useState([]);
     const [categories, setCategories] = useState([]);
     const [filters, setFilters] = useState({
@@ -53,15 +38,18 @@ const SweetDashboard = () => {
         fetchData();
     }, [])
 
+
     const handleChange = (event, field) => {
         setFilters(f => ({
             ...f,
             [field]: event.target.value
         }))
     }
-    function cleanFilters(obj) {
+
+
+    const cleanFilters = (obj) => {
         return Object.fromEntries(
-            Object.entries(obj).filter(([_, v]) => v != null && v !== "" && v!=undefined)
+            Object.entries(obj).filter(([_, v]) => v != null && v !== "" && v != undefined)
         );
     }
     const applyFilters = async () => {
@@ -76,6 +64,34 @@ const SweetDashboard = () => {
     const checkFilters = () => {
         return (!filters.name && !filters.category && !filters.maxPrice && !filters.minPrice);
     }
+
+
+    const handleOnBuyClick = async (id) => {
+        const { res, err } = await sweetApi.purchase({ id: id, stock: -1 });
+        if (res) {
+            setSweets((prevSweets) =>
+                prevSweets.map((sweet) => (sweet.id === id ? res : sweet))
+            );
+            toast.success("Sweet purchased!");
+        }
+        if (err) toast.error(typeof err === 'string' ? err : 'An error occurred. Please try again.')
+
+    }
+    const handleOnUpdateClick = async (id) => {
+        // Navigate("/")
+    }
+
+    const handleOnDeleteClick = async (id) => {
+        const { res, err } = await sweetApi.delete({ id: id });
+        if (res) {
+            setSweets((prevSweets) => prevSweets.filter((sweet) => sweet.id !== id));
+            toast.success("Sweet Deleted!");
+        }
+        if (err) toast.error(typeof err === 'string' ? err : 'An error occurred. Please try again.')
+    }
+
+
+
     return (
         <VStack spacing={6} align="stretch" p={6}>
             <Heading mb={6} textAlign="center">
@@ -106,7 +122,7 @@ const SweetDashboard = () => {
             <Box>
                 <SimpleGrid columns={[1, 2, 3]} spacing={6}>
                     {sweets.map((sweet) => (
-                        <SweetCard key={sweet.id} sweet={sweet} />
+                        <SweetCard key={sweet.id} sweet={sweet} onBuyClick={handleOnBuyClick} onUpdateClick={handleOnUpdateClick} onDeleteClick={handleOnDeleteClick} showMenu={true}/>
                     ))}
                 </SimpleGrid>
             </Box>

@@ -13,7 +13,8 @@ import {
 } from "@chakra-ui/react";
 import { FiMoreVertical } from "react-icons/fi";
 
-const SweetCard = ({ sweet }) => {
+const SweetCard = ({ sweet, onBuyClick, onUpdateClick, onDeleteClick,showMenu  }) => {
+
     return (
         <Box
             key={sweet.id}
@@ -44,19 +45,22 @@ const SweetCard = ({ sweet }) => {
             </VStack>
 
             <VStack spacing={5}>
-                <Menu>
-                    <MenuButton
-                        as={IconButton}
-                        icon={<FiMoreVertical />}
-                        variant="ghost"
-                        size="sm"
-                    />
-                    <MenuList>
-                        <MenuItem >Update Sweet</MenuItem>
-                        <MenuItem color="red.500">Delete Sweet</MenuItem>
-                    </MenuList>
-                </Menu>
-                <Button colorScheme="teal" size="sm">
+                {showMenu && (
+                    <Menu>
+                        <MenuButton
+                            as={IconButton}
+                            icon={<FiMoreVertical />}
+                            variant="ghost"
+                            size="sm"
+                        />
+                        <MenuList>
+                            <MenuItem onClick={()=>onUpdateClick(sweet.id)}>Update Sweet</MenuItem>
+                            <MenuItem onClick={()=>onDeleteClick(sweet.id)} color="red.500">Delete Sweet</MenuItem>
+                            
+                        </MenuList>
+                    </Menu>
+                )}
+                <Button colorScheme="teal" size="sm" onClick={()=>onBuyClick(sweet.id)}>
                     Buy
                 </Button>
             </VStack>
