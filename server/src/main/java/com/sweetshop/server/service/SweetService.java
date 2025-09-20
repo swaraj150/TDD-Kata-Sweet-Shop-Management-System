@@ -57,7 +57,7 @@ public class SweetService {
     public SweetResponse updateSweet(UpdateSweetRequest request, Long id){
         UserResponse user=userService.loadCurrentUser();
         if(!user.getRole().hasAuthority(UserAuthority.UPDATE_SWEET)){
-            throw new UnauthorizedAccessException("User does not have the required authority");
+            throw new AccessDeniedException("User does not have the required authority");
         }
         Sweet sweet=loadSweetById(id);
         Optional.ofNullable(request.getName())
@@ -76,7 +76,7 @@ public class SweetService {
     public void deleteSweet(Long id){
         UserResponse user=userService.loadCurrentUser();
         if(!user.getRole().hasAuthority(UserAuthority.DELETE_SWEET)){
-            throw new UnauthorizedAccessException("User does not have the required authority");
+            throw new AccessDeniedException("User does not have the required authority");
         }
         sweetRepository.deleteById(id);
     }
