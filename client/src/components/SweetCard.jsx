@@ -10,6 +10,7 @@ import {
     MenuList,
     MenuItem,
     IconButton,
+    Flex
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { FiMoreVertical } from "react-icons/fi";
@@ -25,7 +26,7 @@ const SweetCard = ({ sweet, onBuyClick, onUpdateClick, onDeleteClick, isAdmin })
             setShowMenu(true);
         }
     }, [isAdmin])
-      
+
     return (
         <Box
             key={sweet.id}
@@ -40,12 +41,19 @@ const SweetCard = ({ sweet, onBuyClick, onUpdateClick, onDeleteClick, isAdmin })
             justifyContent="space-between"
         >
             <VStack spacing={2} align="start" flex="1" >
-                <HStack spacing={10}>
-                    <Tooltip label={sweet.name} hasArrow >
-                        <Text fontWeight="bold" fontSize="lg" isTruncated maxW="180px" mr={4}>
+               
+                <Flex align="center" justify="space-between" w="100%">
+                    <Tooltip label={sweet.name} hasArrow>
+                        <Text
+                            fontWeight="bold"
+                            fontSize="lg"
+                            isTruncated
+                            maxW="180px"
+                        >
                             {sweet.name}
                         </Text>
                     </Tooltip>
+
                     <Menu>
                         <MenuButton
                             as={IconButton}
@@ -56,12 +64,13 @@ const SweetCard = ({ sweet, onBuyClick, onUpdateClick, onDeleteClick, isAdmin })
                         />
                         <MenuList>
                             <MenuItem onClick={() => onUpdateClick(sweet)}>Update Sweet</MenuItem>
-                            <MenuItem onClick={() => onDeleteClick(sweet.id)} color="red.500">Delete Sweet</MenuItem>
-
+                            <MenuItem onClick={() => onDeleteClick(sweet.id)} color="red.500">
+                                Delete Sweet
+                            </MenuItem>
                         </MenuList>
                     </Menu>
+                </Flex>
 
-                </HStack>
                 <Text color="gray.600">Category: {sweet.category}</Text>
 
                 <HStack spacing={5} >
@@ -71,16 +80,16 @@ const SweetCard = ({ sweet, onBuyClick, onUpdateClick, onDeleteClick, isAdmin })
                     <Text w="75px" fontWeight="semibold">Stock: {sweet.stockCount}</Text>
                     <QuantityStepper value={quantity} setValue={setQuantity} min={1} max={100} />
                 </HStack>
-                 <Button colorScheme="teal" size="sm" onClick={() => onBuyClick(sweet.id, quantity, showMenu ? (1) : (-1))} isDisabled={!(buttonType=="Buy" && sweet?.stockCount)}>
+                <Button colorScheme="teal" size="sm" onClick={() => onBuyClick(sweet.id, quantity, showMenu ? (1) : (-1))} isDisabled={!(buttonType == "Buy" && sweet?.stockCount)}>
                     {buttonType}
                 </Button>
             </VStack>
 
             <VStack spacing={6}>
 
-                
 
-               
+
+
             </VStack>
 
 
