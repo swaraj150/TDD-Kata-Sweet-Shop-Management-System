@@ -95,8 +95,8 @@ Frontend will be available at: http://localhost:5173
 ### 4. Default Admin User
 
 Insert an admin user for testing:
-email:admin@sweets.com
-password:admin@123
+- email: admin@sweets.com
+- password: admin@123
 
 ---
 
