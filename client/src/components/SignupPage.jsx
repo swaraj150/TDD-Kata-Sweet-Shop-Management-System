@@ -1,5 +1,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from 'react-router-dom'
+
 import {
     Box,
     Button,
@@ -15,27 +17,27 @@ import userApi from "../api/modules/user.api";
 import { toast } from 'react-toastify'
 import { useUser } from "../context/UserContext";
 
-const SignUpPage=()=>{
+const SignUpPage = () => {
     const {
         register,
         handleSubmit,
         formState: { errors, isSubmitting },
     } = useForm();
     const { user, setUser } = useUser();
-    
-    const onSubmit = async(values) => {
-       const {res,err}=await userApi.signup(values);
-       if (res && res.jwtoken && res.email) {
-        localStorage.setItem('jwtoken', res.jwtoken)
-        toast.success('Registration successful! Welcome aboard.')
-        setUser({name:res.name, role:res.role})
+    const navigate = useNavigate()
 
-        navigate('/home')
-      }
-      if (err) {
-        localStorage.removeItem('jwtoken')
-        toast.error(typeof err === 'string' ? err : 'An error occurred. Please try again.')
-      }
+    const onSubmit = async (values) => {
+        const { res, err } = await userApi.signup(values);
+        if (res && res.jwtToken && res.email) {
+            localStorage.setItem('jwtToken', res.jwtToken)
+            toast.success('Registration successful! Welcome aboard.')
+            setUser({ name: res.name, role: res.role })
+            navigate('/home')
+        }
+        if (err) {
+            localStorage.removeItem('jwtoken')
+            toast.error(typeof err === 'string' ? err : 'An error occurred. Please try again.')
+        }
     };
 
     return (
@@ -79,6 +81,7 @@ const SignUpPage=()=>{
                         <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
                     </FormControl>
 
+                    
                     <FormControl isInvalid={errors.password}>
                         <FormLabel>Password</FormLabel>
                         <Input
@@ -86,10 +89,29 @@ const SignUpPage=()=>{
                             placeholder="Enter password"
                             {...register("password", {
                                 required: "Password is required",
-                                minLength: { value: 6, message: "Minimum length is 6" },
+                                minLength: { value: 8, message: "Minimum length is 8" },
+                                pattern: {
+                                    value: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=~]).{8,20}$/,
+                                    message:
+                                        "Password must include uppercase, lowercase, number, special character, 8-20 chars",
+                                },
                             })}
                         />
                         <FormErrorMessage>{errors.password?.message}</FormErrorMessage>
+                    </FormControl>
+
+                    <FormControl isInvalid={errors.confirmPassword}>
+                        <FormLabel>Confirm Password</FormLabel>
+                        <Input
+                            type="password"
+                            placeholder="Confirm password"
+                            {...register("confirmPassword", {
+                                required: "Confirm Password is required",
+                                validate: (value, formValues) =>
+                                    value === formValues.password || "Passwords do not match",
+                            })}
+                        />
+                        <FormErrorMessage>{errors.confirmPassword?.message}</FormErrorMessage>
                     </FormControl>
 
                     <FormControl isInvalid={errors.phoneNumber}>

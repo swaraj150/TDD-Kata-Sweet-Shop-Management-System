@@ -41,7 +41,7 @@ const SweetCard = ({ sweet, onBuyClick, onUpdateClick, onDeleteClick, isAdmin })
             justifyContent="space-between"
         >
             <VStack spacing={2} align="start" flex="1" >
-               
+
                 <Flex align="center" justify="space-between" w="100%">
                     <Tooltip label={sweet.name} hasArrow>
                         <Text
@@ -80,7 +80,8 @@ const SweetCard = ({ sweet, onBuyClick, onUpdateClick, onDeleteClick, isAdmin })
                     <Text w="75px" fontWeight="semibold">Stock: {sweet.stockCount}</Text>
                     <QuantityStepper value={quantity} setValue={setQuantity} min={1} max={100} />
                 </HStack>
-                <Button colorScheme="teal" size="sm" onClick={() => onBuyClick(sweet.id, quantity, showMenu ? (1) : (-1))} isDisabled={!(buttonType == "Buy" && sweet?.stockCount)}>
+                <Button colorScheme="teal" size="sm" onClick={() => onBuyClick(sweet.id, quantity, showMenu ? (1) : (-1))} isDisabled={buttonType === "Buy" ? sweet?.stockCount === 0 : false}
+                >
                     {buttonType}
                 </Button>
             </VStack>
