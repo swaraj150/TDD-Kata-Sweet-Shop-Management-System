@@ -11,10 +11,20 @@ import {
     MenuItem,
     IconButton,
 } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import { FiMoreVertical } from "react-icons/fi";
+import QuantityStepper from "./QuantityStepper";
 
-const SweetCard = ({ sweet, onBuyClick, onUpdateClick, onDeleteClick,showMenu  }) => {
-
+const SweetCard = ({ sweet, onBuyClick, onUpdateClick, onDeleteClick, isAdmin }) => {
+    const [quantity, setQuantity] = useState(1);
+    const [buttonType, setButtonType] = useState("Buy");
+    const [showMenu, setShowMenu] = useState(false);
+    useEffect(() => {
+        if (isAdmin) {
+            setButtonType("Restock")
+            setShowMenu(true);
+        }
+    }, [isAdmin])
     return (
         <Box
             key={sweet.id}
@@ -41,27 +51,30 @@ const SweetCard = ({ sweet, onBuyClick, onUpdateClick, onDeleteClick,showMenu  }
                         ₹{sweet.price}
                     </Text>
                     <Text fontWeight="semibold">Stock: {sweet.stockCount}</Text>
+                    <QuantityStepper value={quantity} setValue={setQuantity} min={1} max={100} />
                 </HStack>
             </VStack>
 
-            <VStack spacing={5}>
-                {showMenu && (
-                    <Menu>
-                        <MenuButton
-                            as={IconButton}
-                            icon={<FiMoreVertical />}
-                            variant="ghost"
-                            size="sm"
-                        />
-                        <MenuList>
-                            <MenuItem onClick={()=>onUpdateClick(sweet.id)}>Update Sweet</MenuItem>
-                            <MenuItem onClick={()=>onDeleteClick(sweet.id)} color="red.500">Delete Sweet</MenuItem>
-                            
-                        </MenuList>
-                    </Menu>
-                )}
-                <Button colorScheme="teal" size="sm" onClick={()=>onBuyClick(sweet.id)}>
-                    Buy
+            <VStack spacing={6}>
+
+                <Menu>
+                    <MenuButton
+                        as={IconButton}
+                        icon={<FiMoreVertical />}
+                        variant="ghost"
+                        size="sm"
+                        // visibility={showMenu ? "visible" : "hidden"}
+                        disabled={!showMenu}
+                    />
+                    <MenuList>
+                        <MenuItem onClick={() => onUpdateClick(sweet.id)}>Update Sweet</MenuItem>
+                        <MenuItem onClick={() => onDeleteClick(sweet.id)} color="red.500">Delete Sweet</MenuItem>
+
+                    </MenuList>
+                </Menu>
+
+                <Button colorScheme="teal" size="sm" onClick={() => onBuyClick(sweet.id, quantity, showMenu ? (-1) : (1))} disabled={quantity <= 0}>
+                    {buttonType}
                 </Button>
             </VStack>
         </Box>

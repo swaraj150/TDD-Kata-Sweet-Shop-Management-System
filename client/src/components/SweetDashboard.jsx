@@ -66,8 +66,8 @@ const SweetDashboard = () => {
     }
 
 
-    const handleOnBuyClick = async (id) => {
-        const { res, err } = await sweetApi.purchase({ id: id, stock: -1 });
+    const handleOnBuyClick = async (id,quantity,factor=-1) => {
+        const { res, err } = await sweetApi.purchase({ id: id, stock: quantity*(factor) });
         if (res) {
             setSweets((prevSweets) =>
                 prevSweets.map((sweet) => (sweet.id === id ? res : sweet))
@@ -122,7 +122,7 @@ const SweetDashboard = () => {
             <Box>
                 <SimpleGrid columns={[1, 2, 3]} spacing={6}>
                     {sweets.map((sweet) => (
-                        <SweetCard key={sweet.id} sweet={sweet} onBuyClick={handleOnBuyClick} onUpdateClick={handleOnUpdateClick} onDeleteClick={handleOnDeleteClick} showMenu={true}/>
+                        <SweetCard key={sweet.id} sweet={sweet} onBuyClick={handleOnBuyClick} onUpdateClick={handleOnUpdateClick} onDeleteClick={handleOnDeleteClick} isAdmin={false}/>
                     ))}
                 </SimpleGrid>
             </Box>
