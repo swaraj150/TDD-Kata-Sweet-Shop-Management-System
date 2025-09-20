@@ -50,13 +50,12 @@ public class SweetController {
         return ResponseEntity.ok(results);
     }
     @PostMapping("/{id}/purchase")
-    public ResponseEntity<String> purchaseSweet(@PathVariable @NonNull Long id,@RequestBody @NonNull UpdateSweetInventoryRequest request){
-        sweetService.updateInventory(id,request.getStockValue()>0?request.getStockValue()*(-1):request.getStockValue());
-        return ResponseEntity.ok("purchased successfully");
+    public ResponseEntity<SweetResponse> purchaseSweet(@PathVariable @NonNull Long id,@RequestBody @NonNull UpdateSweetInventoryRequest request){
+        return ResponseEntity.ok(sweetService.updateInventory(id,request.getStock(),1));
+
     }
     @PostMapping("/{id}/restock")
-    public ResponseEntity<String> restockSweet(@PathVariable @NonNull Long id,@RequestBody @NonNull UpdateSweetInventoryRequest request){
-        sweetService.updateInventory(id,request.getStockValue()<0?request.getStockValue()*(-1):request.getStockValue());
-        return ResponseEntity.ok("restocked successfully");
+    public ResponseEntity<SweetResponse> restockSweet(@PathVariable @NonNull Long id,@RequestBody @NonNull UpdateSweetInventoryRequest request){
+        return ResponseEntity.ok(sweetService.updateInventory(id,request.getStock(),0));
     }
 }

@@ -8,6 +8,7 @@ import com.sweetshop.server.dto.sweet.response.SweetResponse;
 import com.sweetshop.server.dto.user.response.UserResponse;
 import com.sweetshop.server.entity.Sweet;
 import com.sweetshop.server.entity.UserAuthority;
+import com.sweetshop.server.exception.AccessDeniedException;
 import com.sweetshop.server.exception.UnauthorizedAccessException;
 import com.sweetshop.server.repository.SweetRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -81,15 +82,17 @@ public class SweetService {
     }
 
 
-    public void updateInventory(Long id,Integer stock){
+    public SweetResponse updateInventory(Long id,Integer stock,int mode){
         UserResponse user=userService.loadCurrentUser();
-        if(!user.getRole().hasAuthority(UserAuthority.UPDATE_INVENTORY)){
-            throw new UnauthorizedAccessException("User does not have the required authority");
+        UserAuthority authority=mode==1?UserAuthority.PURCHASE_SWEET:UserAuthority.UPDATE_INVENTORY;
+        if(!user.getRole().hasAuthority(authority)){
+            throw new AccessDeniedException("User does not have the required authority");
         }
         Sweet sweet=loadSweetById(id);
-        if(sweet.getStockCount()+stock>0){
+        if(sweet.getStockCount()+stock>=0){
             sweet.setStockCount(sweet.getStockCount()+stock);
             sweetRepository.save(sweet);
+            return SweetResponse.toSweetResponse(sweet);
         }else{
             throw new IllegalStateException("No sweets left");
         }
