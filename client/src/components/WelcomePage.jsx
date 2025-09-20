@@ -9,6 +9,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const WelcomePage = () => {
   const navigate = useNavigate();
@@ -16,7 +17,13 @@ const WelcomePage = () => {
     "linear(to-r, teal.300, purple.300)",
     "linear(to-r, teal.600, purple.600)"
   );
-
+  
+  useEffect(()=>{
+    const jwtToken=localStorage.getItem("jwtToken");
+    if(jwtToken && jwtToken!=undefined){
+      navigate("/home");
+    }
+  },[])
   return (
     <Box
       minH="100vh"
