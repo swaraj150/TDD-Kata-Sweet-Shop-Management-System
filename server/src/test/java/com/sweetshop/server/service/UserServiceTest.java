@@ -36,7 +36,7 @@ class UserServiceTest {
 
     @Test
     void createUser_shouldSaveUserAndReturnResponse() {
-        CreateUserRequest request = new CreateUserRequest("Alice", "alice@example.com", "Password@123","1234567890");
+        CreateUserRequest request = new CreateUserRequest("Alice", "alice@example.com", "Password@123","1234567890","USER");
         User user = new User();
         user.setName("Alice");
         user.setEmail("alice@example.com");

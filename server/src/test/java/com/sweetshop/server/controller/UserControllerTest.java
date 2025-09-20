@@ -39,7 +39,7 @@ public class UserControllerTest {
 
     @Test
     void registerUser_shouldReturnUserResponse() throws Exception {
-        CreateUserRequest request = new CreateUserRequest("John Doe","john@example.com","Password@123", "1234567890");
+        CreateUserRequest request = new CreateUserRequest("John Doe","john@example.com","Password@123", "1234567890","USER");
         UserResponse mockResponse = new UserResponse();
         mockResponse.setEmail("john@example.com");
         mockResponse.setJwtToken("fake_jwt_token");
