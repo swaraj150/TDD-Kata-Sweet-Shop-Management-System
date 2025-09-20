@@ -1,23 +1,14 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+
 import './App.css'
 import { ChakraProvider } from "@chakra-ui/react";
-import SignUpPage from './components/SignupPage';
-import { publicRoutes } from './routes/Routes';
+import { privateRoutes, publicRoutes } from './routes/Routes';
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
+import NotFoundPage from './components/NotFoundPage';
+import PrivateRoute from './routes/PrivateRoute';
 function App() {
-  const [count, setCount] = useState(0)
-  const handleSignIn = (data) => {
-    console.log("Sign In:", data);
-    // call backend login API here
-  };
-
-  const handleSignUp = (data) => {
-    console.log("Sign Up:", data);
-    // call backend register API here
-  };
+ 
   return (
     <>
       <ToastContainer
@@ -42,6 +33,16 @@ function App() {
               <Route path={route.path} key={index} element={route.element} />
             ))
           }
+            {
+              privateRoutes.map((route, index) => (
+                  <Route path={route.path} key={index} element={
+                    <PrivateRoute role={route.role}>
+                      {route.element}
+                    </PrivateRoute>
+                  } />
+              ))
+            }
+          <Route path="*" element={<NotFoundPage />} />
           </Routes>
           
         
