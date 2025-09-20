@@ -128,7 +128,7 @@ public class SweetServiceTest {
 
         when(sweetRepository.findById(1L)).thenReturn(Optional.of(sweet));
 
-        sweetService.updateInventory(1L,-1);
+        sweetService.updateInventory(1L,-1,1);
 
         assertEquals(4, sweet.getStockCount());
         verify(sweetRepository, times(1)).save(sweet);
@@ -144,7 +144,7 @@ public class SweetServiceTest {
 
         when(sweetRepository.findById(1L)).thenReturn(Optional.of(sweet));
 
-        assertThrows(IllegalStateException.class, () -> sweetService.updateInventory(1L,-1));
+        assertThrows(IllegalStateException.class, () -> sweetService.updateInventory(1L,-1,1));
     }
 
     @Test
