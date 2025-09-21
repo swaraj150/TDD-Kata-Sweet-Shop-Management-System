@@ -6,6 +6,8 @@ import com.sweetshop.server.dto.user.response.UserResponse;
 import com.sweetshop.server.entity.User;
 import com.sweetshop.server.entity.UserRole;
 import com.sweetshop.server.repository.UserRepository;
+import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,6 +31,10 @@ public class UserService {
 
 
     public UserResponse createUser(CreateUserRequest request){
+        userRepository.findByEmail(request.getEmail()).ifPresent((user)->{
+            throw new EntityExistsException("User already exists!");
+        });
+
         User user=new User();
         user.setName(request.getName());
         user.setEmail(request.getEmail());
@@ -45,11 +51,15 @@ public class UserService {
         return UserResponse.toUserResponse(user,jwtToken);
     }
     private void authenticateUser(String email, String password) {
+
+
         UsernamePasswordAuthenticationToken authToken =
                 new UsernamePasswordAuthenticationToken(email, password);
         authenticationManager.authenticate(authToken);
     }
     public UserResponse authenticate(LoginUserRequest request){
+        userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new EntityNotFoundException("User not found!"));
         authenticateUser(request.getEmail(), request.getPassword());
         UserDetails user=userDetailsService.loadUserByUsername(request.getEmail());
         String jwtToken=jwtService.generateToken(user);
@@ -62,7 +72,7 @@ public class UserService {
     public UserResponse loadCurrentUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {
-            throw new SecurityException("No authentication information found");
+            throw new SecurityException("Authenticate to proceed");
         }
         String email=authentication.getName();
         return loadUser(email);
