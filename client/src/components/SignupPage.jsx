@@ -59,7 +59,7 @@ const SignUpPage = () => {
                     <FormControl isInvalid={errors.name}>
                         <FormLabel>Name</FormLabel>
                         <Input
-                            placeholder="Your Name"
+                            placeholder="Enter your name"
                             {...register("name", { required: "Name is required" })}
                         />
                         <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
@@ -69,7 +69,7 @@ const SignUpPage = () => {
                         <FormLabel>Email</FormLabel>
                         <Input
                             type="email"
-                            placeholder="Enter email"
+                            placeholder="Enter your email"
                             {...register("email", {
                                 required: "Email is required",
                                 pattern: {
@@ -86,7 +86,7 @@ const SignUpPage = () => {
                         <FormLabel>Password</FormLabel>
                         <Input
                             type="password"
-                            placeholder="Enter password"
+                            placeholder="Enter your password"
                             {...register("password", {
                                 required: "Password is required",
                                 minLength: { value: 8, message: "Minimum length is 8" },
@@ -104,7 +104,7 @@ const SignUpPage = () => {
                         <FormLabel>Confirm Password</FormLabel>
                         <Input
                             type="password"
-                            placeholder="Confirm password"
+                            placeholder="Re-enter your password"
                             {...register("confirmPassword", {
                                 required: "Confirm Password is required",
                                 validate: (value, formValues) =>
@@ -118,9 +118,9 @@ const SignUpPage = () => {
                         <FormLabel>Phone Number</FormLabel>
                         <Input
                             type="tel"
-                            placeholder="1234567890"
+                            placeholder="Enter your Phone number"
                             {...register("phoneNumber", {
-                                required: "Phone number is required",
+                                // required: "Phone number is required",
                                 pattern: {
                                     value: /^[0-9]{10}$/,
                                     message: "Enter a valid 10-digit phone number",
