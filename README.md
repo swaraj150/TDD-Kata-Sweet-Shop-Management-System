@@ -39,6 +39,13 @@ Admins can manage sweets, while customers can browse and buy them.
 - PostgreSQL
 
 ---
+🚀 Deployment
+
+- Frontend (Static Site): Render
+
+- Backend (Spring Boot + PostgreSQL): Render
+
+- Access the live application here: https://tdd-kata-sweet-shop-management-system-1.onrender.com/
 
 ## 🏁 Getting Started
 
