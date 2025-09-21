@@ -8,6 +8,9 @@ import {
     Select,
     Button,
     HStack,
+    Spinner,
+    Text,
+    Flex
 
 } from "@chakra-ui/react";
 import SweetCard from "./SweetCard";
@@ -31,17 +34,31 @@ const SweetDashboard = () => {
         maxPrice: "",
 
     }
+
+    const [loadState, setLoadState] = useState({
+        isSubmittingBuy: {},
+        isSubmittingFilter: false,
+        areSweetsLoading: false
+    })
+
+
     const [filters, setFilters] = useState(defaultFilter);
     const [fetch, setFetch] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
+            setLoadState(prev => ({ ...prev, areSweetsLoading: true }))
             const { res, err } = await sweetApi.getAll();
             if (res) {
                 setSweets(res.sweets);
                 setCategories(res.categories);
+                setLoadState(prev => ({ ...prev, areSweetsLoading: false }))
+
             }
-            if (err) toast.error(typeof err === 'string' ? err : 'An error occurred. Please try again.')
+            if (err) {
+                toast.error(typeof err === 'string' ? err : 'An error occurred. Please try again.')
+                setLoadState(prev => ({ ...prev, areSweetsLoading: false }))
+            }
         }
         if (fetch) {
             fetchData();
@@ -81,18 +98,30 @@ const SweetDashboard = () => {
     }
 
     const applyFilters = async () => {
+        setLoadState(prev => ({ ...prev, isSubmittingFilter: true }))
         const params = cleanFilters(filters)
         const { res, err } = await sweetApi.search(params);
         if (res) {
             setSweets(res);
+            setLoadState(prev => ({ ...prev, isSubmittingFilter: false }))
         }
-        if (err) toast.error(typeof err === 'string' ? err : 'An error occurred. Please try again.')
+        if (err) {
+            toast.error(typeof err === 'string' ? err : 'An error occurred. Please try again.')
+            setLoadState(prev => ({ ...prev, isSubmittingFilter: false }))
+        }
     };
 
 
 
 
     const handleOnBuyClick = async (id, quantity, factor = -1) => {
+        setLoadState((prev) => ({
+            ...prev,
+            isSubmittingBuy: {
+                ...prev.isSubmittingBuy,
+                [id]: true,
+            }
+        }));
         if (factor == -1) {
             const { res, err } = await sweetApi.purchase({ id: id, stock: quantity * (factor) });
             if (res) {
@@ -100,8 +129,24 @@ const SweetDashboard = () => {
                     prevSweets.map((sweet) => (sweet.id === id ? res : sweet))
                 );
                 toast.success(`Sweet Purchased!`);
+                setLoadState((prev) => ({
+                    ...prev,
+                    isSubmittingBuy: {
+                        ...prev.isSubmittingBuy,
+                        [id]: false,
+                    }
+                }));
             }
-            if (err) toast.error(typeof err === 'string' ? err : 'An error occurred. Please try again.')
+            if (err) {
+                toast.error(typeof err === 'string' ? err : 'An error occurred. Please try again.')
+                setLoadState((prev) => ({
+                    ...prev,
+                    isSubmittingBuy: {
+                        ...prev.isSubmittingBuy,
+                        [id]: false,
+                    }
+                }));
+            }
 
         }
         else {
@@ -111,8 +156,24 @@ const SweetDashboard = () => {
                     prevSweets.map((sweet) => (sweet.id === id ? res : sweet))
                 );
                 toast.success(`Sweet Restock!`);
+                setLoadState((prev) => ({
+                    ...prev,
+                    isSubmittingBuy: {
+                        ...prev.isSubmittingBuy,
+                        [id]: false,
+                    }
+                }));
             }
-            if (err) toast.error(typeof err === 'string' ? err : 'An error occurred. Please try again.')
+            if (err) {
+                toast.error(typeof err === 'string' ? err : 'An error occurred. Please try again.')
+                setLoadState((prev) => ({
+                    ...prev,
+                    isSubmittingBuy: {
+                        ...prev.isSubmittingBuy,
+                        [id]: false,
+                    }
+                }));
+            }
 
         }
 
@@ -180,6 +241,7 @@ const SweetDashboard = () => {
                         w="10%"
                         onClick={applyFilters}
                         isDisabled={checkFilters()}
+                        isLoading={loadState.isSubmittingFilter}
                     >
                         Filter
                     </Button>
@@ -193,24 +255,32 @@ const SweetDashboard = () => {
             </Box>
 
             <Box>
-                {sweets.length === 0 ? (
-                    <Box textAlign="center" py={10} color="gray.500" fontWeight="medium">
-                        No sweets to display 🍬
-                    </Box>
-                ) : (
-                    <SimpleGrid columns={[1, 2, 3]} spacing={6}>
-                        {sweets.map((sweet) => (
-                            <SweetCard
-                                key={sweet.id}
-                                sweet={sweet}
-                                onBuyClick={handleOnBuyClick}
-                                onUpdateClick={handleOnUpdateClick}
-                                onDeleteClick={handleOnDeleteClick}
-                                isAdmin={isAdmin}
-                            />
-                        ))}
-                    </SimpleGrid>
-                )}
+                {loadState.areSweetsLoading ? (
+                    <Flex w="100%" h="300px" align="center" justify="center" direction="column">
+                        <Spinner size="xl" color="teal.500" />
+                        <Text mt={4}>Loading sweets...</Text>
+                    </Flex>
+                ) :
+                    sweets.length === 0 ? (
+                        <Box textAlign="center" py={10} color="gray.500" fontWeight="medium">
+                            No sweets to display 🍬
+                        </Box>
+                    ) : (
+                        <SimpleGrid columns={[1, 2, 3]} spacing={6}>
+                            {sweets.map((sweet) => (
+                                <SweetCard
+                                    key={sweet.id}
+                                    sweet={sweet}
+                                    onBuyClick={handleOnBuyClick}
+                                    onUpdateClick={handleOnUpdateClick}
+                                    onDeleteClick={handleOnDeleteClick}
+                                    isSubmitting={!!loadState.isSubmittingBuy[sweet.id]}
+                                    isAdmin={isAdmin}
+                                />
+                            ))}
+                        </SimpleGrid>
+                    )
+                }
 
             </Box>
         </VStack>

@@ -16,7 +16,7 @@ import { useEffect, useState } from "react";
 import { FiMoreVertical } from "react-icons/fi";
 import QuantityStepper from "./QuantityStepper";
 
-const SweetCard = ({ sweet, onBuyClick, onUpdateClick, onDeleteClick, isAdmin }) => {
+const SweetCard = ({ sweet, onBuyClick, onUpdateClick, onDeleteClick,isSubmitting, isAdmin }) => {
     const [quantity, setQuantity] = useState(1);
     const [buttonType, setButtonType] = useState("Buy");
     const [showMenu, setShowMenu] = useState(false);
@@ -80,7 +80,7 @@ const SweetCard = ({ sweet, onBuyClick, onUpdateClick, onDeleteClick, isAdmin })
                     <Text w="75px" fontWeight="semibold">Stock: {sweet.stockCount}</Text>
                     <QuantityStepper value={quantity} setValue={setQuantity} min={1} max={100} />
                 </HStack>
-                <Button colorScheme="teal" size="sm" onClick={() => onBuyClick(sweet.id, quantity, showMenu ? (1) : (-1))} isDisabled={buttonType === "Buy" ? sweet?.stockCount === 0 : false}
+                <Button colorScheme="teal" size="sm" isLoading={isSubmitting}onClick={() => onBuyClick(sweet.id, quantity, showMenu ? (1) : (-1))} isDisabled={buttonType === "Buy" ? sweet?.stockCount === 0 : false}
                 >
                     {buttonType}
                 </Button>
